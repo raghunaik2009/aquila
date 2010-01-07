@@ -1,5 +1,20 @@
 #summary Various things left to do.
 
-= Misc =
 
+= Core functionality =
+General architecture considerations and core classes functionality.
+ * base SignalSource (DataSource?) class
+
+
+= Feature extraction =
+Various formats and feature types.
+ * HFCC features, based on MFCC
+
+
+= Optimization =
+Where the speed matters...
+ * Some of FFT complex calculations should be cached
+
+= Misc =
+Miscellaneous other issues.
  * a better install script!
