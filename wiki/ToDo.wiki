@@ -1,0 +1,5 @@
+#summary Various things left to do.
+
+= Misc =
+
+ * a better install script!
