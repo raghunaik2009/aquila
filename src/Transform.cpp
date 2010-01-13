@@ -109,15 +109,16 @@ namespace Aquila
         // Wi - starting value of Fourier base coefficient
         // W - Fourier base multiplying factor
 		unsigned int L = 0, M = 0, p = 0, q = 0, r = 0;
-		cplx W(0, 0), Wi(0, 0), Temp(0, 0);
+        cplx Wi(0, 0), Temp(0, 0);
+
+        cplx** Wi_cache = getCachedFftWi(numStages);
 
         // iterate over the stages
 		for (unsigned int k = 1; k <= numStages; ++k)
 		{
             L = 1 << k;
             M = 1 << (k - 1);
-            Wi = cplx(1);
-            W = exp((-j) * 2.0 * M_PI / double(L));
+            Wi = Wi_cache[k][0];
 
             // iterate over butterflies
 			for (p = 1; p <= M; ++p)
@@ -130,7 +131,7 @@ namespace Aquila
                     spectrum[r - 1] = spectrum[q - 1] - Temp;
                     spectrum[q - 1] = spectrum[q - 1] + Temp;
 				}
-                Wi *= W;
+                Wi = Wi_cache[k][p];
 			}
 		}
 
@@ -276,7 +277,7 @@ namespace Aquila
     /**
      * Deletes all the memory used by cache.
      */
-    void Transform::clearCache()
+    void Transform::clearCosineCache()
     {
         cosineCacheType::const_iterator it;
         for (it = cosineCache.begin(); it != cosineCache.end(); it++)
@@ -289,6 +290,62 @@ namespace Aquila
                 delete [] cosines[i];
             }
             delete [] cosines;
+        }
+    }
+
+
+    /**
+     * Returns a table of Wi (twiddle factors) stored in cache.
+     *
+     * @param numStages the FFT stages count
+     * @return pointer to an array of pointers to arrays of complex numbers
+     */
+    cplx** Transform::getCachedFftWi(unsigned int numStages)
+    {
+        fftWiCacheKeyType key = numStages;
+        // cache hit, return immediately
+        if (fftWiCache.find(key) != fftWiCache.end())
+        {
+            return fftWiCache[key];
+        }
+
+        // nothing in cache, calculate twiddle factors
+        cplx** Wi = new cplx*[numStages+1];
+        for (unsigned int k = 1; k <= numStages; ++k)
+        {
+            unsigned int L = 1 << k;
+            unsigned int M = 1 << (k-1);
+            cplx W = exp((-j) * 2.0 * M_PI / double(L));
+            Wi[k] = new cplx[M+1];
+            Wi[k][0] = cplx(1.0);
+            for (unsigned int p = 1; p <= M; ++p)
+            {
+                Wi[k][p] = Wi[k][p-1] * W;
+            }
+        }
+
+        // store in cache and return
+        fftWiCache[key] = Wi;
+
+        return Wi;
+    }
+
+    /**
+     * Clears the twiddle factor cache.
+     */
+    void Transform::clearFftWiCache()
+    {
+        fftWiCacheType::const_iterator it;
+        for (it = fftWiCache.begin(); it != fftWiCache.end(); it++)
+        {
+            cplx** c = it->second;
+            unsigned int numStages = it->first;
+            for (unsigned int i = 1; i <= numStages; ++i)
+            {
+                delete [] c[i];
+            }
+
+            delete [] c;
         }
     }
 }

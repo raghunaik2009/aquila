@@ -38,7 +38,7 @@ namespace Aquila
     /**
      * Library version.
      */
-    const std::string VERSION = "2.5.0";
+    const std::string VERSION = "2.5.1";
 
     /**
      * Total count of Mel frequency scale filters.

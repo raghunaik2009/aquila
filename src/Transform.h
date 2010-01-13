@@ -101,7 +101,8 @@ namespace Aquila
          */
         ~Transform()
         {
-            clearCache();
+            clearCosineCache();
+            clearFftWiCache();
         }
 
         double frameLogEnergy(const Frame* frame);
@@ -147,7 +148,29 @@ namespace Aquila
 
         double** getCachedCosines(unsigned int inputLength, unsigned int outputLength);
 
-        void clearCache();
+        void clearCosineCache();
+
+
+
+        // TWIDDLE FACTOR CACHE FOR FFT
+        /**
+         * Type of the twiddle factor cache key.
+         */
+        typedef unsigned int fftWiCacheKeyType;
+
+        /**
+         * Type of the twiddle factor cache.
+         */
+        typedef std::map<fftWiCacheKeyType, cplx**> fftWiCacheType;
+
+        /**
+         * Twiddle factor cache - implemented as a map.
+         */
+        fftWiCacheType fftWiCache;
+
+        cplx** getCachedFftWi(unsigned int numStages);
+
+        void clearFftWiCache();
 	};
 }
 
