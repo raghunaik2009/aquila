@@ -1,3 +1,6 @@
+2.5.1
+ + added slight optimization in FFT (5-20% faster, depending on frame size)
+
 2.5.0
  + slightly optimized WaveFile load() method
  + major optimization in DCT calculations (40-50% faster computation!)
