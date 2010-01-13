@@ -286,9 +286,9 @@ namespace Aquila
             unsigned int outputLength = key.second;
             for (unsigned int i = 0; i < outputLength; ++i)
             {
-                delete cosines[i];
+                delete [] cosines[i];
             }
-            delete cosines;
+            delete [] cosines;
         }
     }
 }
