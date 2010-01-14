@@ -107,7 +107,6 @@ namespace Aquila
         // q - block index
         // r - index of sample in butterfly
         // Wi - starting value of Fourier base coefficient
-        // W - Fourier base multiplying factor
 		unsigned int L = 0, M = 0, p = 0, q = 0, r = 0;
         cplx Wi(0, 0), Temp(0, 0);
 
@@ -313,6 +312,9 @@ namespace Aquila
         cplx** Wi = new cplx*[numStages+1];
         for (unsigned int k = 1; k <= numStages; ++k)
         {
+            // L = 2^k - DFT block length and offset
+            // M = 2^(k-1) - butterflies per block, butterfly width
+            // W - Fourier base multiplying factor
             unsigned int L = 1 << k;
             unsigned int M = 1 << (k-1);
             cplx W = exp((-j) * 2.0 * M_PI / double(L));
