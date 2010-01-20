@@ -5,13 +5,14 @@
  *
  * @author Zbigniew Siciarz
  * @date 2007-2010
- * @version 2.5.0
+ * @version 2.5.1
  * @since 2.3.0
  */
 
 #include "ExtractorFactory.h"
 
 #include "EnergyExtractor.h"
+#include "HfccExtractor.h"
 #include "MfccExtractor.h"
 #include "PowerExtractor.h"
 #include "../Exceptions.h"
@@ -38,6 +39,10 @@ namespace Aquila
         if ("MFCC" == featureType)
         {
             return new MfccExtractor(frameLength, paramsPerFrame);
+        }
+        else if ("HFCC" == featureType)
+        {
+            return new HfccExtractor(frameLength, paramsPerFrame);
         }
         else if ("Energy" == featureType)
         {

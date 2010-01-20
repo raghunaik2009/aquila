@@ -5,7 +5,7 @@
  *
  * @author Zbigniew Siciarz
  * @date 2007-2010
- * @version 2.5.0
+ * @version 2.5.1
  * @since 0.4.6
  */
 
@@ -31,7 +31,7 @@ namespace Aquila
 
         void setEnabledMelFilters(bool enabled[]);
 
-    private:
+    protected:
         /**
          * Mel filters bank, static and common to all MFCC extractors.
          */
@@ -42,7 +42,7 @@ namespace Aquila
          */
         bool* enabledFilters;
 
-        void updateFilters(unsigned int frequency, unsigned int N);
+        virtual void updateFilters(unsigned int frequency, unsigned int N);
     };
 }
 
