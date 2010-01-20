@@ -26,6 +26,8 @@ namespace Aquila
     public:
         MelFiltersBank(double sampleFrequency, unsigned short melFilterWidth,
                        unsigned int N);
+        MelFiltersBank(double sampleFrequency, unsigned int N,
+                       bool isHfcc = true);
         ~MelFiltersBank();
 
         void applyAll(spectrumType& frameSpectrum, unsigned int N,
