@@ -24,6 +24,8 @@ namespace Aquila
     class AQUILA_EXPORT MelFilter
     {
     public:
+        friend class MelFiltersBank;
+
         explicit MelFilter(double sampleFrequency);
 
         void createFilter(unsigned short filterNum,
