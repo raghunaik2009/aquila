@@ -44,6 +44,7 @@ HEADERS +=      WaveFile.h \
     feature/FeatureReader.h \
     feature/EnergyExtractor.h \
     feature/MfccExtractor.h \
+    feature/HfccExtractor.h \
     feature/PowerExtractor.h \
     feature/ExtractorFactory.h \
     ProcessingIndicator.h \
@@ -64,6 +65,7 @@ SOURCES +=       WaveFile.cpp \
     feature/FeatureReader.cpp \
     feature/EnergyExtractor.cpp \
     feature/MfccExtractor.cpp \
+    feature/HfccExtractor.cpp \
     feature/PowerExtractor.cpp \
     feature/ExtractorFactory.cpp \
     dtw/DtwPoint.cpp \

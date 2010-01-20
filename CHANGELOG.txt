@@ -1,5 +1,6 @@
 2.5.1
  + added slight optimization in FFT (5-20% faster, depending on frame size)
+ + added HFCC features
 
 2.5.0
  + slightly optimized WaveFile load() method
