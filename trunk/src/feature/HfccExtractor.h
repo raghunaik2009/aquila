@@ -27,6 +27,11 @@ namespace Aquila
         ~HfccExtractor();
 
     protected:
+        /**
+         * Mel filters bank, static and common to all HFCC extractors.
+         */
+        static MelFiltersBank* hfccFilters;
+
         void updateFilters(unsigned int frequency, unsigned int N);
     };
 }

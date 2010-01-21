@@ -38,6 +38,12 @@ namespace Aquila
      */
     struct AQUILA_EXPORT FeatureHeader
     {
+        FeatureHeader():
+            type(""), frameLength(0), paramsPerFrame(0), wavFilename(""),
+            timestamp(0)
+        {
+        }
+
         std::string type;
         unsigned int frameLength;
         unsigned int paramsPerFrame;

@@ -11,8 +11,12 @@
 
 #include "HfccExtractor.h"
 
+#include "../MelFiltersBank.h"
+
 namespace Aquila
 {
+    MelFiltersBank* HfccExtractor::hfccFilters = 0;
+
     /**
      * Sets frame length and number of parameters per frame.
      *
@@ -44,21 +48,21 @@ namespace Aquila
      */
     void HfccExtractor::updateFilters(unsigned int frequency, unsigned int N)
     {
-        if (!filters)
+        if (!hfccFilters)
         {
-            filters = new MelFiltersBank(frequency, N, true);
+            hfccFilters = new MelFiltersBank(frequency, N, true);
         }
         else
         {
-            if (filters->getSampleFrequency() != frequency ||
-                filters->getSpectrumLength() != N)
+            if (hfccFilters->getSampleFrequency() != frequency ||
+                hfccFilters->getSpectrumLength() != N)
             {
-                delete filters;
-                filters = new MelFiltersBank(frequency, N, true);
+                delete hfccFilters;
+                hfccFilters = new MelFiltersBank(frequency, N, true);
             }
         }
 
         if (enabledFilters)
-            filters->setEnabledFilters(enabledFilters);
+            hfccFilters->setEnabledFilters(enabledFilters);
     }
 }
