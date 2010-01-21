@@ -37,6 +37,47 @@ namespace Aquila
     {
     }
 
+
+    /**
+     * Calculates HFCC features for each frame.
+     *
+     * @param wav recording object
+     * @param options transform options
+     */
+    void HfccExtractor::process(WaveFile* wav, const TransformOptions& options)
+    {
+        wavFilename = wav->getFilename();
+
+        unsigned int framesCount = wav->getFramesCount();
+        featureArray.resize(framesCount);
+
+        if (m_indicator)
+            m_indicator->start(0, framesCount-1);
+
+        unsigned int N = wav->getSamplesPerFrameZP();
+        updateFilters(wav->getSampleFrequency(), N);
+
+        spectrumType frameSpectrum(N);
+        std::vector<double> filtersOutput(MELFILTERS);
+        std::vector<double> frameHfcc(m_paramsPerFrame);
+        Transform transform(options);
+
+        // for each frame: FFT -> Mel filtration -> DCT
+        for (unsigned int i = 0; i < framesCount; ++i)
+        {
+            transform.fft(wav->frames[i], frameSpectrum);
+            hfccFilters->applyAll(frameSpectrum, N, filtersOutput);
+            transform.dct(filtersOutput, frameHfcc);
+            featureArray[i] = frameHfcc;
+
+            if (m_indicator)
+                m_indicator->progress(i);
+        }
+
+        if (m_indicator)
+            m_indicator->stop();
+    }
+
     /**
      * Updates the filter bank.
      *
