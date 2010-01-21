@@ -26,6 +26,8 @@ namespace Aquila
         HfccExtractor(unsigned int frameLength, unsigned int paramsPerFrame);
         ~HfccExtractor();
 
+        void process(WaveFile* wav, const TransformOptions& options);
+
     protected:
         /**
          * Mel filters bank, static and common to all HFCC extractors.
