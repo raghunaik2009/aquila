@@ -8,7 +8,7 @@ General architecture considerations and core classes functionality.
 
 = Feature extraction =
 Various formats and feature types.
- * HFCC features, based on MFCC
+ * ~~HFCC features, based on MFCC~~ done
 
 
 = Optimization =
