@@ -12,3 +12,6 @@ win32 {
 }
 else {
 }
+
+# extra libraries
+INCLUDEPATH += F:\boost_1_41_0

@@ -8,3 +8,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp
+
+# extra libraries
+INCLUDEPATH += F:\boost_1_41_0
