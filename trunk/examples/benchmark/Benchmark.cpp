@@ -9,6 +9,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <numeric>
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 Benchmark::Benchmark(int iterations_count):
     ITERATIONS(iterations_count)
@@ -29,6 +32,12 @@ void Benchmark::run()
     double result = std::accumulate(durations.begin(), durations.end(), 0.0);
     std::cout << "Benchmarking finished." << std::endl;
     std::cout  << "Total result: " << result << std::endl;
+}
+
+std::string Benchmark::getFile(const std::string &filename)
+{
+    fs::path program_path(fs::initial_path<fs::path>());
+    return "";
 }
 
 void Benchmark::testFft()
