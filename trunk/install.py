@@ -34,14 +34,15 @@ else:
         
     os.mkdir(INSTALL_DIR)
     print "Created install directory"
+	
+ignore = shutil.ignore_patterns('.svn*', '*.cpp', '*.rc', '*.pro*', 'Makefile*', 'debug', 'release',
+								'obj', 'objd', 'object_script.*')
 
 print "Copying libraries from %s to %s" % (AQUILA_LIB_DIR, INSTALL_LIB_DIR)
-shutil.copytree(AQUILA_LIB_DIR, INSTALL_LIB_DIR)
+shutil.copytree(AQUILA_LIB_DIR, INSTALL_LIB_DIR, ignore=ignore)
 
 print "Copying include files from %s to %s" % (AQUILA_SRC_DIR, INSTALL_SRC_DIR)
-shutil.copytree(AQUILA_SRC_DIR, INSTALL_SRC_DIR, ignore=shutil.ignore_patterns(
-    '.svn*', '*.cpp', '*.rc', '*.pro*', 'Makefile*', 'debug', 'release',
-    'obj', 'objd', 'object_script.*'))
+shutil.copytree(AQUILA_SRC_DIR, INSTALL_SRC_DIR, ignore=ignore)
 
 print "Copying documentation from %s to %s" % (AQUILA_DOC_DIR, INSTALL_DOC_DIR)
-shutil.copytree(AQUILA_DOC_DIR, INSTALL_DOC_DIR)
+shutil.copytree(AQUILA_DOC_DIR, INSTALL_DOC_DIR, ignore=ignore)
