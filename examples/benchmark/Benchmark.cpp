@@ -10,8 +10,8 @@
 #include <iostream>
 #include <numeric>
 
-Benchmark::Benchmark():
-    ITERATIONS(100)
+Benchmark::Benchmark(int iterations_count):
+    ITERATIONS(iterations_count)
 {
     std::srand(std::time(0));
 }
@@ -54,7 +54,7 @@ void Benchmark::testDct()
 {
     startTime = clock();
 
-    const int TEST_DATA_SIZE = 128, DCT_SIZE = 12;
+    const int TEST_DATA_SIZE = 1024, DCT_SIZE = 12;
     std::vector<double> testData(TEST_DATA_SIZE), dctOutput(DCT_SIZE);
     Aquila::Transform transform(0);
     for (int i = 0; i < ITERATIONS; ++i)

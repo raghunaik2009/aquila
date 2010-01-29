@@ -7,7 +7,7 @@
 class Benchmark
 {
 public:
-    Benchmark();
+    Benchmark(int iterations_count);
     void run();
 
 private:
