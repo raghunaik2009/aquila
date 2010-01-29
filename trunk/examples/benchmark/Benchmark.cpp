@@ -11,7 +11,6 @@
 #include <numeric>
 #include <boost/filesystem.hpp>
 
-namespace fs = boost::filesystem;
 
 Benchmark::Benchmark(int iterations_count):
     ITERATIONS(iterations_count)
@@ -24,9 +23,9 @@ void Benchmark::run()
     std::cout << "Benchmarking, please wait..." << std::endl;
     testFft();
     testDct();
-    //testWavefile();
-    //testEnergy();
-    //testMfcc();
+    testWavefile();
+    testEnergy();
+    testMfcc();
     //testDtw();
 
     double result = std::accumulate(durations.begin(), durations.end(), 0.0);
@@ -36,8 +35,16 @@ void Benchmark::run()
 
 std::string Benchmark::getFile(const std::string &filename)
 {
-    fs::path program_path(fs::initial_path<fs::path>());
-    return "";
+    using namespace boost::filesystem;
+    path program_path(initial_path<path>());
+    if (program_path.filename() == "debug" ||
+        program_path.filename() == "release")
+    {
+        program_path = program_path.parent_path();
+    }
+    program_path = program_path.parent_path();
+    program_path /= filename;
+    return program_path.file_string();
 }
 
 void Benchmark::testFft()
@@ -77,70 +84,69 @@ void Benchmark::testDct()
     std::cout << "DCT: " << duration << std::endl;
 }
 
-//void Benchmark::testWavefile()
-//{
-//    startTime = clock();
-//
-//    Aquila::WaveFile* wav = new Aquila::WaveFile(20, 0.66);
-//    QString filename = SimpleBirdApplication::directoryOf("samples") + "/test.wav";
-//    for (int i = 0; i < ITERATIONS; ++i)
-//    {
-//        wav->load(filename.toStdString());
-//    }
-//
-//    delete wav;
-//    double duration = clock() - startTime;
-//    durations.push_back(duration);
-//    std::cout << "Wave file: " << duration << std::endl;
-//}
+void Benchmark::testWavefile()
+{
+    startTime = clock();
 
-//void Benchmark::testEnergy()
-//{
-//    startTime = clock();
-//
-//    Aquila::WaveFile* wav = new Aquila::WaveFile(20, 0.66);
-//    QString filename = SimpleBirdApplication::directoryOf("samples") + "/test.wav";
-//    wav->load(filename.toStdString());
-//
-//    Aquila::Transform transform(0);
-//    double energy;
-//    for (int i = 0; i < ITERATIONS; ++i)
-//    {
-//        for (unsigned int j = 0; j < wav->getFramesCount(); ++j)
-//        {
-//            energy = transform.frameLogEnergy(wav->frames[j]);
-//        }
-//    }
-//
-//    delete wav;
-//    double duration = clock() - startTime;
-//    durations.push_back(duration);
-//    std::cout << "Energy: " << duration << std::endl;
-//}
+    Aquila::WaveFile* wav = new Aquila::WaveFile(20, 0.66);
+    std::string filename = getFile("test.wav");
+    for (int i = 0; i < ITERATIONS; ++i)
+    {
+        wav->load(filename);
+    }
 
-//void Benchmark::testMfcc()
-//{
-//    startTime = clock();
-//
-//    Aquila::WaveFile* wav = new Aquila::WaveFile(20, 0.66);
-//    QString filename = SimpleBirdApplication::directoryOf("samples") + "/test.wav";
-//    Aquila::MfccExtractor* extractor = new Aquila::MfccExtractor(20, 10);
-//
-//    wav->load(filename.toStdString());
-//
-//    Aquila::TransformOptions options;
-//    options.preemphasisFactor = 0.9375;
-//    options.windowType = Aquila::WIN_HAMMING;
-//    options.zeroPaddedLength = wav->getSamplesPerFrameZP();
-//
-//    extractor->process(wav, options);
-//
-//    delete wav;
-//    delete extractor;
-//    double duration = clock() - startTime;
-//    durations.push_back(duration);
-//    std::cout << "MFCC: " << duration << std::endl;
-//}
+    delete wav;
+    double duration = clock() - startTime;
+    durations.push_back(duration);
+    std::cout << "Wave file: " << duration << std::endl;
+}
+
+void Benchmark::testEnergy()
+{
+    startTime = clock();
+
+    Aquila::WaveFile* wav = new Aquila::WaveFile(20, 0.66);
+    std::string filename = getFile("test.wav");
+    wav->load(filename);
+
+    Aquila::Transform transform(0);
+    double energy;
+    for (int i = 0; i < ITERATIONS; ++i)
+    {
+        for (unsigned int j = 0; j < wav->getFramesCount(); ++j)
+        {
+            energy = transform.frameLogEnergy(wav->frames[j]);
+        }
+    }
+
+    delete wav;
+    double duration = clock() - startTime;
+    durations.push_back(duration);
+    std::cout << "Energy: " << duration << std::endl;
+}
+
+void Benchmark::testMfcc()
+{
+    startTime = clock();
+
+    Aquila::WaveFile* wav = new Aquila::WaveFile(20, 0.66);
+    std::string filename = getFile("test.wav");
+    wav->load(filename);
+    Aquila::MfccExtractor* extractor = new Aquila::MfccExtractor(20, 10);
+
+    Aquila::TransformOptions options;
+    options.preemphasisFactor = 0.9375;
+    options.windowType = Aquila::WIN_HAMMING;
+    options.zeroPaddedLength = wav->getSamplesPerFrameZP();
+
+    extractor->process(wav, options);
+
+    delete wav;
+    delete extractor;
+    double duration = clock() - startTime;
+    durations.push_back(duration);
+    std::cout << "MFCC: " << duration << std::endl;
+}
 
 //void Benchmark::testDtw()
 //{

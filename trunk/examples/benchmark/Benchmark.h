@@ -14,9 +14,9 @@ public:
 private:
     void testFft();
     void testDct();
-    //void testWavefile();
-    //void testEnergy();
-    //void testMfcc();
+    void testWavefile();
+    void testEnergy();
+    void testMfcc();
     //void testDtw();
 
     std::string getFile(const std::string& filename);
