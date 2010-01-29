@@ -9,8 +9,8 @@ win32 {
             -llibboost_system-mgw44-s
 }
 unix {
-    LIBS += -lboost_filesystem \
-            -lboost_system
+    LIBS += -lboost_filesystem-mt \
+            -lboost_system-mt
 }
 # AQUILA
 win32 {
