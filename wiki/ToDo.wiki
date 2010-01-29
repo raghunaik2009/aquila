@@ -1,9 +1,21 @@
 #summary Various things left to do.
+#labels Phase-Design
 
 
 = Core functionality =
 General architecture considerations and core classes functionality.
  * base SignalSource (DataSource?) class
+ * (*in version 3.0?*) internal data type should be template argument, something like
+{{{
+template < typename Numeric, typename Container = std::vector<Numeric> >
+class SignalSource
+{
+//...
+private:
+    Container data;
+//...
+};
+}}}
 
 
 = Feature extraction =
@@ -18,3 +30,4 @@ Where the speed matters...
 = Misc =
 Miscellaneous other issues.
  * a better install script!
+ * introduce Boost - fixed size integers, lambda functions and binding etc.
