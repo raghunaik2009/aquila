@@ -31,3 +31,4 @@ Where the speed matters...
 Miscellaneous other issues.
  * a better install script!
  * introduce Boost - fixed size integers, lambda functions and binding etc.
+ * use "cleaner" boost library references, like -lboost_system, without those -omg-wtf suffixes (how to do it?)
