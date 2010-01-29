@@ -8,7 +8,7 @@
  *
  * @author Zbigniew Siciarz
  * @date 2007-2010
- * @version 2.5.0
+ * @version 2.5.1
  * @since 0.0.7
  */
 
@@ -19,12 +19,8 @@
 #include "Frame.h"
 #include <string>
 #include <vector>
+#include <boost/cstdint.hpp>
 
-// FIXME: safer 8b and 16b types!
-#ifndef _WORD
-typedef unsigned int _DWORD;
-typedef unsigned short _WORD;
-#endif
 
 namespace Aquila
 {
@@ -34,18 +30,18 @@ namespace Aquila
     struct AQUILA_EXPORT WaveHeader
     {
         char   RIFF[4];
-        _DWORD  DataLength;
+        boost::uint32_t DataLength;
         char   WAVE[4];
         char   fmt_[4];
-        _DWORD  SubBlockLength;
-        _WORD   formatTag;
-        _WORD   Channels;
-        _DWORD  SampFreq;
-        _DWORD  BytesPerSec;
-        _WORD   BytesPerSamp;
-        _WORD   BitsPerSamp;
+        boost::uint32_t SubBlockLength;
+        boost::uint16_t formatTag;
+        boost::uint16_t Channels;
+        boost::uint32_t SampFreq;
+        boost::uint32_t BytesPerSec;
+        boost::uint16_t BytesPerSamp;
+        boost::uint16_t BitsPerSamp;
         char   data[4];
-        _DWORD  WaveSize;
+        boost::uint32_t WaveSize;
     };
 
 
