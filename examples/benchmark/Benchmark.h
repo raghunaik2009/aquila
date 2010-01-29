@@ -1,6 +1,7 @@
 #ifndef BENCHMARK_H
 #define BENCHMARK_H
 
+#include <string>
 #include <vector>
 #include <boost/timer.hpp>
 
@@ -17,6 +18,8 @@ private:
     //void testEnergy();
     //void testMfcc();
     //void testDtw();
+
+    std::string getFile(const std::string& filename);
 
 
     double clock();
