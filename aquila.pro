@@ -2,7 +2,8 @@ include(config.pri)
 
 TEMPLATE = subdirs
 SUBDIRS = \
-        src
+        src \
+        examples
 
 OTHER_FILES += CHANGELOG.txt \
                install.py
