@@ -4,11 +4,13 @@
 #include "aquila/dtw/Dtw.h"
 #include "aquila/Transform.h"
 #include "aquila/WaveFile.h"
+#include "aquila/ConsoleProcessingIndicator.h"
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include <numeric>
 #include <boost/filesystem.hpp>
+#include <boost/progress.hpp>
 
 
 Benchmark::Benchmark(int iterations_count):
@@ -59,10 +61,12 @@ void Benchmark::testFft()
     Aquila::spectrumType spectrum(TEST_DATA_SIZE);
     Aquila::Transform transform(0);
 
+    boost::progress_display progress(ITERATIONS);
     startTime = clock();
     for (int i = 0; i < ITERATIONS; ++i)
     {
         transform.fft(testData, spectrum);
+        ++progress;
     }
 
     double duration = clock() - startTime;
@@ -77,10 +81,12 @@ void Benchmark::testDct()
     std::generate(testData.begin(), testData.end(), generateRandomDouble);
     Aquila::Transform transform(0);
 
+    boost::progress_display progress(ITERATIONS);
     startTime = clock();
     for (int i = 0; i < ITERATIONS; ++i)
     {
         transform.dct(testData, dctOutput);
+        ++progress;
     }
 
     double duration = clock() - startTime;
@@ -93,10 +99,12 @@ void Benchmark::testWavefile()
     Aquila::WaveFile* wav = new Aquila::WaveFile(20, 0.66);
     std::string filename = getFile("test.wav");
 
+    boost::progress_display progress(ITERATIONS);
     startTime = clock();
     for (int i = 0; i < ITERATIONS; ++i)
     {
         wav->load(filename);
+        ++progress;
     }
 
     double duration = clock() - startTime;
@@ -114,6 +122,7 @@ void Benchmark::testEnergy()
     Aquila::Transform transform(0);
     double energy;
 
+    boost::progress_display progress(ITERATIONS);
     startTime = clock();
     for (int i = 0; i < ITERATIONS; ++i)
     {
@@ -121,6 +130,7 @@ void Benchmark::testEnergy()
         {
             energy = transform.frameLogEnergy(wav->frames[j]);
         }
+        ++progress;
     }
 
     double duration = clock() - startTime;
@@ -142,6 +152,9 @@ void Benchmark::testMfcc()
     options.preemphasisFactor = 0.9375;
     options.windowType = Aquila::WIN_HAMMING;
     options.zeroPaddedLength = wav->getSamplesPerFrameZP();
+
+    Aquila::ConsoleProcessingIndicator progress;
+    extractor->setProcessingIndicator(&progress);
 
     startTime = clock();
     extractor->process(wav, options);

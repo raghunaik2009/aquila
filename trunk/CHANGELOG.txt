@@ -1,3 +1,7 @@
+2.5.2
+ + started to introduce Boost C++ libraries in some places
+ + added a console textual progress indicator using boost
+
 2.5.1
  + added slight optimization in FFT (5-20% faster, depending on frame size)
  + added HFCC features
