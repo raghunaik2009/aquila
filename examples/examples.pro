@@ -7,4 +7,5 @@ include($${AQUILA_ROOT_DIR}/config.pri)
 
 TEMPLATE = subdirs
 SUBDIRS = \
-            benchmark
+            benchmark \
+            wave_info
