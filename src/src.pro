@@ -48,6 +48,7 @@ HEADERS +=      WaveFile.h \
     feature/PowerExtractor.h \
     feature/ExtractorFactory.h \
     ProcessingIndicator.h \
+    ConsoleProcessingIndicator.h \
     dtw/DtwPoint.h \
     dtw/functions.h \
     dtw/Dtw.h \
@@ -68,6 +69,7 @@ SOURCES +=       WaveFile.cpp \
     feature/HfccExtractor.cpp \
     feature/PowerExtractor.cpp \
     feature/ExtractorFactory.cpp \
+    ConsoleProcessingIndicator.cpp \
     dtw/DtwPoint.cpp \
     dtw/functions.cpp \
     dtw/Dtw.cpp
