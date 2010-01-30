@@ -4,11 +4,13 @@
 #include <string>
 #include <vector>
 #include <boost/timer.hpp>
+#include "aquila/feature/MfccExtractor.h"
 
 class Benchmark
 {
 public:
     Benchmark(int iterations_count);
+    ~Benchmark();
     void run();
 
 private:
@@ -17,12 +19,12 @@ private:
     void testWavefile();
     void testEnergy();
     void testMfcc();
-    //void testDtw();
+    void testDtw();
 
     std::string getFile(const std::string& filename);
 
-
     double clock();
+
     boost::timer t;
 
     int ITERATIONS;
@@ -30,6 +32,8 @@ private:
     double startTime;
 
     std::vector<double> durations;
+
+    Aquila::MfccExtractor* extractor;
 };
 
 double generateRandomDouble();

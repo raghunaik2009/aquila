@@ -1,7 +1,6 @@
 
 #include "Benchmark.h"
 
-#include "aquila/feature/MfccExtractor.h"
 #include "aquila/dtw/Dtw.h"
 #include "aquila/Transform.h"
 #include "aquila/WaveFile.h"
@@ -13,9 +12,14 @@
 
 
 Benchmark::Benchmark(int iterations_count):
-    ITERATIONS(iterations_count)
+    ITERATIONS(iterations_count), extractor(0)
 {
     std::srand(std::time(0));
+}
+
+Benchmark::~Benchmark()
+{
+    delete extractor;
 }
 
 void Benchmark::run()
@@ -26,7 +30,7 @@ void Benchmark::run()
     testWavefile();
     testEnergy();
     testMfcc();
-    //testDtw();
+    testDtw();
 
     double result = std::accumulate(durations.begin(), durations.end(), 0.0);
     std::cout << "Benchmarking finished." << std::endl;
@@ -49,15 +53,15 @@ std::string Benchmark::getFile(const std::string &filename)
 
 void Benchmark::testFft()
 {
-    startTime = clock();
-
     const int TEST_DATA_SIZE = 65536;
     std::vector<double> testData(TEST_DATA_SIZE);
+    std::generate(testData.begin(), testData.end(), generateRandomDouble);
     Aquila::spectrumType spectrum(TEST_DATA_SIZE);
     Aquila::Transform transform(0);
+
+    startTime = clock();
     for (int i = 0; i < ITERATIONS; ++i)
     {
-        std::generate(testData.begin(), testData.end(), generateRandomDouble);
         transform.fft(testData, spectrum);
     }
 
@@ -68,14 +72,14 @@ void Benchmark::testFft()
 
 void Benchmark::testDct()
 {
-    startTime = clock();
-
     const int TEST_DATA_SIZE = 1024, DCT_SIZE = 12;
     std::vector<double> testData(TEST_DATA_SIZE), dctOutput(DCT_SIZE);
+    std::generate(testData.begin(), testData.end(), generateRandomDouble);
     Aquila::Transform transform(0);
+
+    startTime = clock();
     for (int i = 0; i < ITERATIONS; ++i)
     {
-        std::generate(testData.begin(), testData.end(), generateRandomDouble);
         transform.dct(testData, dctOutput);
     }
 
@@ -86,92 +90,82 @@ void Benchmark::testDct()
 
 void Benchmark::testWavefile()
 {
-    startTime = clock();
-
     Aquila::WaveFile* wav = new Aquila::WaveFile(20, 0.66);
     std::string filename = getFile("test.wav");
+
+    startTime = clock();
     for (int i = 0; i < ITERATIONS; ++i)
     {
         wav->load(filename);
     }
 
-    delete wav;
     double duration = clock() - startTime;
     durations.push_back(duration);
     std::cout << "Wave file: " << duration << std::endl;
+    delete wav;
 }
 
 void Benchmark::testEnergy()
 {
-    startTime = clock();
-
     Aquila::WaveFile* wav = new Aquila::WaveFile(20, 0.66);
     std::string filename = getFile("test.wav");
     wav->load(filename);
 
     Aquila::Transform transform(0);
     double energy;
+
+    startTime = clock();
     for (int i = 0; i < ITERATIONS; ++i)
     {
-        for (unsigned int j = 0; j < wav->getFramesCount(); ++j)
+        for (unsigned int j = 0, fc = wav->getFramesCount(); j < fc; ++j)
         {
             energy = transform.frameLogEnergy(wav->frames[j]);
         }
     }
 
-    delete wav;
     double duration = clock() - startTime;
     durations.push_back(duration);
     std::cout << "Energy: " << duration << std::endl;
+    delete wav;
 }
 
 void Benchmark::testMfcc()
 {
-    startTime = clock();
-
     Aquila::WaveFile* wav = new Aquila::WaveFile(20, 0.66);
     std::string filename = getFile("test.wav");
     wav->load(filename);
-    Aquila::MfccExtractor* extractor = new Aquila::MfccExtractor(20, 10);
+
+    delete extractor;
+    extractor = new Aquila::MfccExtractor(20, 10);
 
     Aquila::TransformOptions options;
     options.preemphasisFactor = 0.9375;
     options.windowType = Aquila::WIN_HAMMING;
     options.zeroPaddedLength = wav->getSamplesPerFrameZP();
 
+    startTime = clock();
     extractor->process(wav, options);
 
-    delete wav;
-    delete extractor;
     double duration = clock() - startTime;
     durations.push_back(duration);
     std::cout << "MFCC: " << duration << std::endl;
+    delete wav;
 }
 
-//void Benchmark::testDtw()
-//{
-//    startTime = clock();
-//
-//    QString fromFile = SimpleBirdApplication::directoryOf("samples") + "/from.bir";
-//    QString toFile = SimpleBirdApplication::directoryOf("samples") + "/to.bir";
-//    Aquila::Extractor* from = FormatFactory::readIntoExtractor(fromFile);
-//    Aquila::Extractor* to = FormatFactory::readIntoExtractor(toFile);
-//    Aquila::Dtw* dtw = new Aquila::Dtw(from);
-//
-//    double distance;
-//    for (int i = 0; i < ITERATIONS; ++i)
-//    {
-//        distance = dtw->getDistance(to);
-//    }
-//
-//    delete dtw;
-//    delete to;
-//    delete from;
-//
-//    double duration = clock() - startTime;
-//    durations.push_back(duration);
-//    std::cout << "DTW: " << duration << std::endl;
-//}
+void Benchmark::testDtw()
+{
+    if (!extractor)
+        return;
+
+    startTime = clock();
+    Aquila::Dtw* dtw = new Aquila::Dtw(extractor);
+    dtw->getDistance(extractor);
+
+    double duration = clock() - startTime;
+    durations.push_back(duration);
+    std::cout << "DTW: " << duration << std::endl;
+    delete dtw;
+}
 
 
 double Benchmark::clock()
