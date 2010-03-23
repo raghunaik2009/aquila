@@ -1,22 +1,6 @@
 #include <iostream>
-#include <string>
-#include <boost/filesystem.hpp>
+#include "../utils.h"
 #include "aquila/WaveFile.h"
-
-std::string getFile(const std::string &filename)
-{
-    using namespace boost::filesystem;
-    path program_path(initial_path<path>());
-    if (program_path.filename() == "debug" ||
-        program_path.filename() == "release")
-    {
-        program_path = program_path.parent_path();
-    }
-    program_path = program_path.parent_path();
-    program_path /= filename;
-    return program_path.file_string();
-}
-
 
 int main(int argc, char *argv[])
 {
