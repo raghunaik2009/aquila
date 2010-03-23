@@ -1,3 +1,5 @@
+#summary List of changes in all versions since 2.0.0.
+
 =Changes=
 
 ==2.5.2==
