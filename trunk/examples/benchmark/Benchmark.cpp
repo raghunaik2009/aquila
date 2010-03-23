@@ -5,6 +5,7 @@
 #include "aquila/Transform.h"
 #include "aquila/WaveFile.h"
 #include "aquila/ConsoleProcessingIndicator.h"
+#include "../utils.h"
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
@@ -37,20 +38,6 @@ void Benchmark::run()
     double result = std::accumulate(durations.begin(), durations.end(), 0.0);
     std::cout << "Benchmarking finished." << std::endl;
     std::cout  << "Total result: " << result << std::endl;
-}
-
-std::string Benchmark::getFile(const std::string &filename)
-{
-    using namespace boost::filesystem;
-    path program_path(initial_path<path>());
-    if (program_path.filename() == "debug" ||
-        program_path.filename() == "release")
-    {
-        program_path = program_path.parent_path();
-    }
-    program_path = program_path.parent_path();
-    program_path /= filename;
-    return program_path.file_string();
 }
 
 void Benchmark::testFft()

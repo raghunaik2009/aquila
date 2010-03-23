@@ -9,4 +9,5 @@ SOURCES += main.cpp \
     Benchmark.cpp
 
 # extra libraries
-HEADERS += Benchmark.h
+HEADERS += Benchmark.h \
+           ../utils.h

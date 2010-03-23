@@ -8,6 +8,6 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-
 SOURCES += main.cpp
+HEADERS += ../utils.h
 
