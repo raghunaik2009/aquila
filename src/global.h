@@ -5,7 +5,7 @@
  *
  * @author Zbigniew Siciarz
  * @date 2007-2010
- * @version 2.5.0
+ * @version 2.5.2
  * @since 2.4.1
  */
 
@@ -38,7 +38,7 @@ namespace Aquila
     /**
      * Library version.
      */
-    const std::string VERSION = "2.5.1";
+    const std::string VERSION = "2.5.2";
 
     /**
      * Total count of Mel frequency scale filters.
