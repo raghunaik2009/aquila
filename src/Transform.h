@@ -9,7 +9,7 @@
  *
  * @author Zbigniew Siciarz
  * @date 2007-2010
- * @version 2.5.0
+ * @version 2.6.0
  * @since 0.2.0
  */
 
@@ -17,6 +17,7 @@
 #define TRANSFORM_H
 
 #include "global.h"
+#include "Cache.h"
 #include "Frame.h"
 #include "Window.h"
 #include <functional>
@@ -96,15 +97,6 @@ namespace Aquila
         {
         }
 
-        /**
-         * Makes sure no memory leaks are caused by the cache.
-         */
-        ~Transform()
-        {
-            clearCosineCache();
-            clearFftWiCache();
-        }
-
         double frameLogEnergy(const Frame* frame);
         double framePower(const Frame* frame) ;
 
@@ -139,16 +131,19 @@ namespace Aquila
         /**
          * Cache type.
          */
-        typedef std::map<cosineCacheKeyType, double**> cosineCacheType;
+        typedef Cache<cosineCacheKeyType, double**> cosineCacheType;
 
         /**
-         * Cache object, implemented as a map.
+         * Generator method.
          */
-        cosineCacheType cosineCache;
+        static double** generateCosines(const cosineCacheKeyType& key);
 
-        double** getCachedCosines(unsigned int inputLength, unsigned int outputLength);
+        /**
+         * Static cache object.
+         */
+        static cosineCacheType cosineCache;
 
-        void clearCosineCache();
+        //void clearCosineCache(); // TODO: move clearing to Cache class!
 
 
 
@@ -161,16 +156,19 @@ namespace Aquila
         /**
          * Type of the twiddle factor cache.
          */
-        typedef std::map<fftWiCacheKeyType, cplx**> fftWiCacheType;
+        typedef Cache<fftWiCacheKeyType, cplx**> fftWiCacheType;
 
         /**
-         * Twiddle factor cache - implemented as a map.
+         * Generator method.
          */
-        fftWiCacheType fftWiCache;
+        static cplx** generateFftWi(const fftWiCacheKeyType& key);
 
-        cplx** getCachedFftWi(unsigned int numStages);
+        /**
+         * Cache object.
+         */
+        static fftWiCacheType fftWiCache;
 
-        void clearFftWiCache();
+        //void clearFftWiCache(); // TODO: move clearing to Cache class!
 	};
 }
 
