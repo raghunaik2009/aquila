@@ -33,6 +33,7 @@ win32:AquilaDll {
 HEADERS +=      WaveFile.h \
     Tools.h \
     Exceptions.h \
+    Cache.h \
     Frame.h \
     Transform.h \
     Window.h \
