@@ -9,7 +9,7 @@
  *
  * @author Zbigniew Siciarz
  * @date 2007-2010
- * @version 2.5.0
+ * @version 2.6.0
  * @since 0.2.0
  */
 
@@ -22,6 +22,9 @@
 namespace Aquila
 {
 	const cplx Transform::j(0, 1);
+
+    Transform::cosineCacheType Transform::cosineCache(Transform::generateCosines);
+    Transform::fftWiCacheType Transform::fftWiCache(Transform::generateFftWi);
 
     /**
      * Calculates logarithm of a frame energy.
@@ -110,7 +113,7 @@ namespace Aquila
 		unsigned int L = 0, M = 0, p = 0, q = 0, r = 0;
         cplx Wi(0, 0), Temp(0, 0);
 
-        cplx** Wi_cache = getCachedFftWi(numStages);
+        cplx** Wi_cache = fftWiCache.get(numStages);
 
         // iterate over the stages
 		for (unsigned int k = 1; k <= numStages; ++k)
@@ -219,7 +222,7 @@ namespace Aquila
         double c0 = sqrt(1.0 / inputLength);
         double cn = sqrt(2.0 / inputLength);
         // cached cosine values
-        double** cosines = getCachedCosines(inputLength, outputLength);
+        double** cosines = cosineCache.get(std::make_pair(inputLength, outputLength));
 
 		for (unsigned int n = 0; n < outputLength; ++n)
 		{
@@ -235,25 +238,15 @@ namespace Aquila
 	}
 
     /**
-     * Returns a table of DCT cosine values stored in memory cache.
+     * Returns a table of DCT cosine values.
      *
-     * The two params unambigiously identify which cache to use.
-     *
-     * @param inputLength length of the input vector
-     * @param outputLength length of the output vector
+     * @param key cosine cache key
      * @return pointer to array of pointers to arrays of doubles
      */
-    double** Transform::getCachedCosines(unsigned int inputLength, unsigned int outputLength)
+    double** Transform::generateCosines(const cosineCacheKeyType& key)
     {
-        cosineCacheKeyType key = std::make_pair(inputLength, outputLength);
+        unsigned int inputLength = key.first, outputLength = key.second;
 
-        // if we have that key cached, return immediately!
-        if (cosineCache.find(key) != cosineCache.end())
-        {
-            return cosineCache[key];
-        }
-
-        // nothing in cache for that pair, calculate cosines
         double** cosines = new double*[outputLength];
         for (unsigned int n = 0; n < outputLength; ++n)
         {
@@ -267,15 +260,14 @@ namespace Aquila
             }
         }
 
-        // store in cache and return
-        cosineCache[key] = cosines;
-
         return cosines;
     }
 
     /**
+     * DISABLED - NO PLACE TO CLEAN THE CACHE YET
+
      * Deletes all the memory used by cache.
-     */
+     *
     void Transform::clearCosineCache()
     {
         cosineCacheType::const_iterator it;
@@ -291,24 +283,20 @@ namespace Aquila
             delete [] cosines;
         }
     }
+    */
 
 
     /**
-     * Returns a table of Wi (twiddle factors) stored in cache.
+     * Returns a table of Wi (twiddle factors).
      *
-     * @param numStages the FFT stages count
+     * @param key cache key
      * @return pointer to an array of pointers to arrays of complex numbers
      */
-    cplx** Transform::getCachedFftWi(unsigned int numStages)
+    cplx** Transform::generateFftWi(const fftWiCacheKeyType& key)
     {
-        fftWiCacheKeyType key = numStages;
-        // cache hit, return immediately
-        if (fftWiCache.find(key) != fftWiCache.end())
-        {
-            return fftWiCache[key];
-        }
+        unsigned int numStages = key;
 
-        // nothing in cache, calculate twiddle factors
+        // calculate twiddle factors
         cplx** Wi = new cplx*[numStages+1];
         for (unsigned int k = 1; k <= numStages; ++k)
         {
@@ -326,15 +314,14 @@ namespace Aquila
             }
         }
 
-        // store in cache and return
-        fftWiCache[key] = Wi;
-
         return Wi;
     }
 
     /**
+     * DISABLED - NO PLACE TO CLEAN THE CACHE YET
+     *
      * Clears the twiddle factor cache.
-     */
+     *
     void Transform::clearFftWiCache()
     {
         fftWiCacheType::const_iterator it;
@@ -350,4 +337,5 @@ namespace Aquila
             delete [] c;
         }
     }
+    */
 }
