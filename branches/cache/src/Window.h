@@ -8,7 +8,7 @@
  *
  * @author Zbigniew Siciarz
  * @date 2007-2010
- * @version 2.5.0
+ * @version 2.6.0
  * @since 0.5.4
  */
 
@@ -16,6 +16,7 @@
 #define WINDOW_H
 
 #include "global.h"
+#include "Cache.h"
 #include <cmath>
 #include <map>
 #include <utility>
@@ -48,22 +49,13 @@ namespace Aquila
         typedef std::pair<WindowType, unsigned int> keyType;
 
         /**
-         *  Window vector type.
+         * Window cache.
          */
-        typedef std::vector<double> winType;
+        static Cache<keyType, double*> windowsCache;
 
-        /**
-         * Cache type.
-         */
-        typedef std::map<keyType, winType> windowsCacheType;
+        static double* createWindow(const keyType& windowKey);
 
-        /**
-         * Window cache implemented as a static map.
-         */
-        static windowsCacheType windowsCache;
-
-        static void createWindow(const keyType& windowKey);
-
+        static double rectangular(unsigned int n, unsigned int N);
         static double hamming(unsigned int n, unsigned int N);
         static double hann(unsigned int n, unsigned int N);
         static double barlett(unsigned int n, unsigned int N);
