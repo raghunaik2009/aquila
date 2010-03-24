@@ -8,7 +8,7 @@
  *
  * @author Zbigniew Siciarz
  * @date 2007-2010
- * @version 2.5.0
+ * @version 2.6.0
  * @since 0.5.4
  */
 
@@ -17,7 +17,7 @@
 
 namespace Aquila
 {
-	Window::windowsCacheType Window::windowsCache;
+    Cache<Window::keyType, double*> Window::windowsCache(Window::createWindow);
 
     /**
      * Returns window value for a given window type, size and position.
@@ -33,39 +33,37 @@ namespace Aquila
     double Window::apply(WindowType type, unsigned int n, unsigned int N)
     {
         keyType key = std::make_pair(type, N);
+        double* window = windowsCache.get(key);
 
-        if (windowsCache.find(key) == windowsCache.end())
-            createWindow(key);
-
-        return windowsCache[key][n];
+        return window[n];
     }
 
     /**
-     * Generates new window vector for a given type and size.
-     *
-     * Rectangular window is handled separately because it does not need
-     * any additional computation.
+     * Generates new window array for a given type and size.
      *
      * @param windowKey a cache key
      */
-	void Window::createWindow(const keyType& windowKey)
+    double* Window::createWindow(const keyType& windowKey)
 	{
         WindowType type = windowKey.first;
         unsigned int N = windowKey.second;
+        double* window = new double[N];
+        std::generate_n(window, N, WinGenerator(type, N));
 
-        if (type != WIN_RECT)
-        {
-            winType window;
-            window.reserve(N);
-            std::generate_n(std::back_inserter(window), N, WinGenerator(type, N));
-            windowsCache[windowKey] = window;
-        }
-        else
-        {
-            winType window(N, 1.0);
-            windowsCache[windowKey] = window;
-        }
+        return window;
 	}
+
+    /**
+     * Rectangular window.
+     *
+     * @param n sample position (ignored)
+     * @param N window size (ignored)
+     * @return n-th window sample value (always 1.0)
+     */
+    double Window::rectangular(unsigned int, unsigned int)
+    {
+        return 1.0;
+    }
 
     /**
      * Hamming window.
@@ -142,6 +140,9 @@ namespace Aquila
     {
         switch (type)
         {
+        case WIN_RECT:
+            windowMethod = &Window::rectangular;
+            break;
         case WIN_HAMMING:
             windowMethod = &Window::hamming;
             break;
