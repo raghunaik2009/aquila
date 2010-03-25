@@ -1,4 +1,5 @@
 #summary Library usage examples.
+#labels Featured
 
 = Examples =
 
