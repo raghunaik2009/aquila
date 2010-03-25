@@ -32,6 +32,6 @@ Where the speed matters...
 = Misc =
 Miscellaneous other issues.
  * switch from qmake to CMake?
- * ~~a better install script!~~ kind of done, something different may come soon
+ * ~~a better install script!~~ kind of done, something different may come soon (again, CMake?)
  * introduce Boost - ~~fixed size integers~~, lambda functions and binding etc. - partially done
- * use "cleaner" boost library references, like -lboost_system, without those -omg-wtf suffixes (how to do it?)
+ * use "cleaner" boost library references, like -lboost_system, without those -omg-wtf suffixes (~~how to do it?~~ CMake should handle that)
