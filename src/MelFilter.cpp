@@ -67,6 +67,25 @@ namespace Aquila
     }
 
     /**
+     * Returns a single value computed by multiplying signal spectrum with
+     * Mel filter spectrum, and summing all the products.
+     *
+     * This is an overload for real-valued data spectrum.
+     *
+     * @param dataAbsSpectrum magnitude of signal spectrum
+     * @param N spectrum length
+     * @return dot product of the spectra
+     */
+    double MelFilter::apply(const std::vector<double>& dataAbsSpectrum,
+                            unsigned int N) const
+    {
+        double value = 0.0;
+        for (unsigned int i = 0; i < N / 2 - 1; ++i)
+            value += dataAbsSpectrum[i] * filterSpectrum[i];
+        return value;
+    }
+
+    /**
      * Fills the vector with spectrum values, but in linear scale.
      *
      * @param minFreq low filter frequency in linear scale

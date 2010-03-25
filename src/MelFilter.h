@@ -33,6 +33,8 @@ namespace Aquila
 
         double apply(const spectrumType& dataSpectrum, unsigned int N) const;
 
+        double apply(const std::vector<double>& dataAbsSpectrum, unsigned int N) const;
+
         /**
          * Turns on/off the filter.
          *

@@ -115,10 +115,18 @@ namespace Aquila
     void MelFiltersBank::applyAll(spectrumType& frameSpectrum, unsigned int N,
                                   std::vector<double>& filtersOutput) const
     {
+        // precalculate spectrum magnitude
+        std::vector<double> frameAbsSpectrum;
+        frameAbsSpectrum.reserve(N / 2 - 1);
+        for (unsigned int i = 0; i < N/2 - 1; ++i)
+        {
+            frameAbsSpectrum.push_back(std::abs(frameSpectrum[i]));
+        }
+
         for (unsigned int i = 0; i < MELFILTERS; ++i)
         {
             if (filters[i]->isEnabled())
-                filtersOutput[i] = filters[i]->apply(frameSpectrum, N);
+                filtersOutput[i] = filters[i]->apply(frameAbsSpectrum, N);
             else
                 filtersOutput[i] = 0.0;
         }
