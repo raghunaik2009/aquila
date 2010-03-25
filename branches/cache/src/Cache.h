@@ -12,7 +12,7 @@
 #ifndef CACHE_H
 #define CACHE_H
 
-#define AQUILA_CACHE_STATS 0
+//#define AQUILA_CACHE_STATS 0
 
 #include <map>
 #ifdef AQUILA_CACHE_STATS
