@@ -1,4 +1,5 @@
 #summary List of changes in all versions since 2.0.0.
+#labels Featured
 
 =Changes=
 
