@@ -17,6 +17,7 @@
 
 #include "global.h"
 #include "Cache.h"
+#include <boost/shared_array.hpp>
 #include <cmath>
 #include <map>
 #include <utility>
@@ -49,11 +50,16 @@ namespace Aquila
         typedef std::pair<WindowType, unsigned int> keyType;
 
         /**
+         * Window cache type.
+         */
+        typedef Cache<keyType, boost::shared_array<double> > WindowCacheType;
+
+        /**
          * Window cache.
          */
-        static Cache<keyType, double*> windowsCache;
+        static WindowCacheType windowsCache;
 
-        static double* createWindow(const keyType& windowKey);
+        static boost::shared_array<double> createWindow(const keyType& windowKey);
 
         static double rectangular(unsigned int n, unsigned int N);
         static double hamming(unsigned int n, unsigned int N);

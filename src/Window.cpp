@@ -17,7 +17,7 @@
 
 namespace Aquila
 {
-    Cache<Window::keyType, double*> Window::windowsCache(Window::createWindow);
+    Window::WindowCacheType Window::windowsCache(Window::createWindow);
 
     /**
      * Returns window value for a given window type, size and position.
@@ -33,7 +33,7 @@ namespace Aquila
     double Window::apply(WindowType type, unsigned int n, unsigned int N)
     {
         keyType key = std::make_pair(type, N);
-        double* window = windowsCache.get(key);
+        boost::shared_array<double> window = windowsCache.get(key);
 
         return window[n];
     }
@@ -43,14 +43,14 @@ namespace Aquila
      *
      * @param windowKey a cache key
      */
-    double* Window::createWindow(const keyType& windowKey)
+    boost::shared_array<double> Window::createWindow(const keyType& windowKey)
 	{
         WindowType type = windowKey.first;
         unsigned int N = windowKey.second;
         double* window = new double[N];
         std::generate_n(window, N, WinGenerator(type, N));
 
-        return window;
+        return boost::shared_array<double>(window);
 	}
 
     /**
