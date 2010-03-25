@@ -5,7 +5,7 @@
  *
  * @author Zbigniew Siciarz
  * @date 2007-2010
- * @version 2.5.0
+ * @version 2.5.3
  * @since 0.3.3
  */
 

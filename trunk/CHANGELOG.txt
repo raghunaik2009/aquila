@@ -1,5 +1,8 @@
 =Changes=
 
+==2.5.3==
+  * optimized Mel filtering, resulting in a huge performance increase with MFCC
+
 ==2.5.2==
   * started to introduce Boost C++ libraries in some places
   * added a console textual progress indicator using boost
