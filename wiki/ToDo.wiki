@@ -16,6 +16,7 @@ private:
 //...
 };
 }}}
+ * modularity; move a few classes into logical sub-namespaces
 
 
 = Feature extraction =
@@ -25,7 +26,8 @@ Various formats and feature types.
 
 = Optimization =
 Where the speed matters...
- * Some of FFT complex calculations should be cached
+ * ~~Some of FFT complex calculations should be cached~~ done
+ * profiling, profiling, profiling...
 
 = Misc =
 Miscellaneous other issues.
