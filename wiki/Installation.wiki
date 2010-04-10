@@ -2,11 +2,22 @@
 
 = Building the library =
 
-You need to have *Qt* installed as the library uses `qmake` as the build system. Then run the following commands:
+You need to have *Qt* installed as the library uses `qmake` as the build system. Boost C++ libraries are another required dependency.
 
+First, get the code from Subversion repository.
 {{{
 svn checkout http://aquila.googlecode.com/svn/trunk/ aquila
 cd aquila
+}}}
+
+*NOTE*: Two files must be modified by hand in order to correctly configure Boost paths. First, edit `config.pri` file located in the project root directory and modify the line
+{{{
+INCLUDEPATH += F:\boost_1_41_0
+}}}
+to your proper Boost installation root. Then, modify the `examples/config.pri` file and change all references to F:\boost_1_41_0 to point to your Boost path. _Fortunately, with the coming Aquila 3 release there will be no need to hack around like that._
+
+When done with editing, run the following commands:
+{{{
 qmake aquila.pro
 make
 }}}
