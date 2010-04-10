@@ -1,0 +1,19 @@
+#summary Installing the library from source.
+
+= Building the library =
+
+You need to have *Qt* installed as the library uses `qmake` as the build system. Then run the following commands:
+
+{{{
+svn checkout http://aquila.googlecode.com/svn/trunk/ aquila
+cd aquila
+qmake aquila.pro
+make
+}}}
+(On Windows, replace `make` with `migw32-make`.)
+
+= Installation =
+
+I know, this is the painful part :( Either manually copy header files found in src/ subdirectory and binaries from lib/ subdirectory, or, if you have *Python* installed, use the `install.py` script. Running it may require administrative privileges.
+
+The files `cfg_nt.py` (for Windows) and `cfg_posix.py` (for Linux) can be modified to tell the script where to install the binaries, headers and documentation.
